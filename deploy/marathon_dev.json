@@ -1,0 +1,60 @@
+{
+  "id": "/foo/bar$service_version",
+  "cmd": "java -jar -Dspring.profiles.active='dev' -d64 /opt/foobar-1.1.0.jar",
+  "instances": 1,
+  "cpus": 1,
+  "mem": 1024,
+  "disk": 0,
+  "constraints": null,
+  "container": {
+    "docker": {
+      "image": "xx.xx.xx.xx/service/foobar:$service_version",
+      "forcePullImage": true,
+      "privileged": false,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 0,
+          "protocol": "tcp"
+        }
+      ],
+      "network": "BRIDGE"
+    },
+    "type": "DOCKER",
+    "volumes": [
+      {
+        "containerPath": "/opt/logs/busi",
+        "hostPath": "/app/microservice/log",
+        "mode": "RW"
+      }
+    ]
+  },
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "path": "/health",
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "timeoutSeconds": 20,
+      "maxConsecutiveFailures": 3,
+      "ignoreHttp1xx": false
+    }
+  ],
+  "env": {
+    "SERVICE_NAME": "foobar",
+    "APP_NAME": "foobar",
+    "ENABLE_PINPOINT": "NO",
+    "AGENT_VERSION": "1.6.0",
+    "JAVA_ARGS": "-Duser.timezone=GMT+08 -Djava.security.egd=file:/dev/./urandom -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"
+  },
+  "labels": {
+    "HAPROXY_DEPLOYMENT_GROUP": "foobar",
+    "HAPROXY_DEPLOYMENT_TARGET_INSTANCES": "100",
+    "HAPROXY_0_BACKEND_WEIGHT": "1",
+    "HAPROXY_GROUP": "internal",
+    "HAPROXY_0_PATH": "/foo/bar",
+    "HAPROXY_0_VHOST": "marathon-lb-internal.marathon.mesos",
+    "GROUPID": "foobar"
+  },
+  "acceptedResourceRoles": null
+}

@@ -1,0 +1,43 @@
+spring.profiles.active: dev
+
+---
+
+# 默认
+server.port: 8080
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+  jpa.properties.hibernate:
+    dialect: org.hibernate.dialect.Oracle10gDialect
+    show_sql: true
+    format_sql: true
+    hbm2ddl.ddl-auto: none
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 10000
+hystrix.threadpool.default:
+  coreSize: 200
+  maxQueueSize: 300
+  queueSizeRejectionThreshold: 20
+
+---
+
+# 开发环境
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION =(ADDRESS_LIST =(LOAD_BALANCE=Off)(FAILOVER=ON)(ADDRESS = (PROTOCOL = TCP)(HOST = xx.xx.xx.xx)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = foobar)(FAILOVER_MODE =(TYPE = SELECT)(METHOD = BASIC))))
+    username: foo
+    password: bar
+    hikari:
+      maximum-pool-size: 3
+
+---
+
+# 生产环境
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION =(ADDRESS_LIST =(LOAD_BALANCE=Off)(FAILOVER=ON)(ADDRESS = (PROTOCOL = TCP)(HOST = xx.xx.xx.xx)(PORT = 1521)))(CONNECT_DATA =(SERVICE_NAME = foobar)(FAILOVER_MODE =(TYPE = SELECT)(METHOD = BASIC))))
+    username: foo
+    password: bar
+    hikari:
+      maximum-pool-size: 10
